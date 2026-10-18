@@ -9,20 +9,20 @@ position_qc_provenance.json.
 
 Two uses:
 
-    python check_positions.py --record <folder with position_qc.csv and position_qc_provenance.json>
+    arrabida-check-positions --record <folder with position_qc.csv and position_qc_provenance.json>
 
 recomputes every residual and status from the archived lidar samples and water levels and
 reports whether they match the archived table (81 consistent, 5 depth_mismatch, 4
 no_bathymetry in release 1.0.0).
 
-    python check_positions.py --record <folder> --lidar emodnet_hr_lidar_sesimbra.tif --out position_qc_rebuilt.csv
+    arrabida-check-positions --record <folder> --lidar emodnet_hr_lidar_sesimbra.tif --out position_qc_rebuilt.csv
 
 also samples the lidar raster at the positions of kelp_quadrats.csv (containing cell, and
 the finite range of the surrounding 3 × 3 cells), rebuilds the table and compares it with
 the archived one. The raster is not part of the record; download
 `590_HR_Lidar_Sul` from EMODnet Bathymetry (https://emodnet.ec.europa.eu/geonetwork/srv/api/records/SDN_CPRD_590_HR_Lidar_Sul),
 clipped to the Sesimbra site, as a GeoTIFF with depths positive downwards relative to LAT.
-Needs rasterio and pyproj for this second use only.
+Needs the `lidar` extra (rasterio) for this second use only.
 """
 
 from __future__ import annotations
@@ -138,7 +138,8 @@ def rebuild(record: Path, raster: Path, out: Path) -> bool:
     for r in rebuilt:
         a = archived.get(r["event_id"])
         if a is None:
-            differing.append(f"{r['event_id']}: not in the archived table"); continue
+            differing.append(f"{r['event_id']}: not in the archived table")
+            continue
         same_depth = (a["lidar_depth_m"] == "" and r["lidar_depth_m"] == "") or (
             a["lidar_depth_m"] and r["lidar_depth_m"] and abs(float(a["lidar_depth_m"]) - float(r["lidar_depth_m"])) < 1e-3
         )

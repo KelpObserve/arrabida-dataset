@@ -13,13 +13,13 @@ Sources: the two delivered photograph folders (one per campaign), each holding t
 folders named like ``16m_T1``. Their sizes and SHA-256 values are pinned in
 ``photo_sources.csv`` beside this script, so a rerun checks that it packs the same files.
 
-    python pack_photographs.py --july <folder> --september <folder> --out <folder> [--tidy-dir <folder>]
+    arrabida-pack-photos --july <folder> --september <folder> --out <folder> [--tidy-dir <folder>]
 
 writes the three ZIP archives and ``photographs.csv`` to ``--out``; with ``--tidy-dir``
 (the record's ``kelp_quadrats.csv``) it also runs the checks of the record. The archives
 are deterministic: each member carries its capture time, so a rerun on the same files
 gives byte-identical ZIPs. ``--write-pins`` rewrites ``photo_sources.csv`` from the files
-on disk, which is a deliberate act after a new delivery. Needs Pillow.
+on disk, which is a deliberate act after a new delivery. Needs the `photos` extra (Pillow).
 """
 
 from __future__ import annotations
@@ -308,10 +308,6 @@ def stage(upload: Path, checks, source_dirs: dict[str, Path], pins_path: Path = 
             }
         )
     rows.sort(key=lambda row: row["file"])
-    sources = {
-        (photo.campaign, photo.relative_path): photo
-        for photo in photos
-    }
     by_name = {
         record_name(photo, photo.quadrat if photo.campaign == "july" else orders[("september", photo.stratum, photo.transect, photo.stem)]): photo
         for photo in photos
@@ -497,7 +493,7 @@ def main() -> int:
     source_dirs = {"july": args.july, "september": args.september}
     if args.write_pins:
         write_pins(args.pins, scan(source_dirs))
-        print(f"pinned {sum(1 for _ in open(args.pins)) - 1} files in {args.pins}")
+        print(f"pinned {len(read_pins(args.pins))} files in {args.pins}")
         return 0
     if not args.out:
         for photo in scan(source_dirs):

@@ -67,28 +67,39 @@ The record's README lists twenty known issues. The ones that matter most for reu
 
 ## Scripts
 
-All scripts read the files of the Zenodo record and write their results next to them. Each one, run on the files of release 1.0.0, reproduces the corresponding file of the record byte for byte. Install the pinned dependencies first:
+The scripts form the Python package `arrabida_dataset`. Each one, run on the files of release 1.0.0, reproduces the corresponding file of the record byte for byte.
+
+### Installation
 
 ```bash
-python3.12 -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install "arrabida-dataset[all] @ git+https://github.com/KelpObserve/arrabida-dataset"
 ```
 
-| Script | Reads | Writes |
-|---|---|---|
-| `make_tidy_tables.py` | the five delivered files | the six tidy tables |
-| `summarize.py` | the tidy tables | the per-campaign summary table above, and the map on request |
-| `overview_map.py` | `kelp_quadrats.csv`, `sonde_casts.csv`, `dive_tracks.geojson` | `overview_map.png` |
-| `check_positions.py` | `position_qc.csv`, `position_qc_provenance.json`, `kelp_quadrats.csv`, optionally the EMODnet lidar raster | a verdict on the archived position check, optionally a rebuilt table |
-| `pack_photographs.py` | the two delivered photograph folders | the three ZIP archives and `photographs.csv` |
+The package needs Python 3.11 or later. The extras `map`, `photos` and `lidar` add matplotlib, Pillow and rasterio for the map, the photograph packing and the lidar sampling; `all` installs the three. To rebuild release 1.0.0 with the exact library versions used for it, clone the repository and install the pins first:
 
-### `make_tidy_tables.py`
+```bash
+pip install -r requirements.txt
+pip install --no-deps .
+```
+
+| Command | Module | Reads | Writes |
+|---|---|---|---|
+| `arrabida-tidy` | `make_tidy_tables` | the five delivered files | the six tidy tables |
+| `arrabida-summary` | `summarize` | the tidy tables | the per-campaign summary table above, and the map on request |
+| `arrabida-map` | `overview_map` | `kelp_quadrats.csv`, `sonde_casts.csv`, `dive_tracks.geojson` | `overview_map.png` |
+| `arrabida-check-positions` | `check_positions` | `position_qc.csv`, `position_qc_provenance.json`, `kelp_quadrats.csv`, optionally the EMODnet lidar raster | a verdict on the archived position check, optionally a rebuilt table |
+| `arrabida-pack-photos` | `pack_photographs` | the two delivered photograph folders | the three ZIP archives and `photographs.csv` |
+
+Each command is also available as `python -m arrabida_dataset.<module>`.
+
+### Tidy tables
 
 Download the five delivered files from the Zenodo record into one folder, keeping their names, then:
 
 ```bash
-python make_tidy_tables.py --raw-dir raw --out-dir tidy
+arrabida-tidy --raw-dir raw --out-dir tidy
 ```
 
 - Groups the rows of the kelp workbook into quadrats by date, depth, transect and quadrat number. Each measured individual becomes one row of `kelp_individuals.csv`; the per-quadrat cover, erosion and epibiont values go to `kelp_quadrats.csv`.
@@ -98,32 +109,42 @@ python make_tidy_tables.py --raw-dir raw --out-dir tidy
 - Rounds the dive-track coordinates to seven decimals and drops their Z values.
 - Adds `survey_date` and `survey_date_evidence` from the campaign chronology, which is encoded explicitly in the function `survey_date()`, and retains the source date fields.
 
-Nothing is modelled, interpolated, offset, filtered or binned, and no observation is removed. The record's `checksums.sha256` lists the SHA-256 of each tidy file and its `release_provenance.json` records the SHA-256 of the script version used, so a rebuilt set can be checked with `shasum -a 256` (`sha256sum` on Linux).
+Nothing is modelled, interpolated, offset, filtered or binned, and no observation is removed. The record's `checksums.sha256` lists the SHA-256 of each tidy file and its `release_provenance.json` records the SHA-256 of `make_tidy_tables.py` as used, so a rebuilt set can be checked with `shasum -a 256` (`sha256sum` on Linux).
 
-### `summarize.py` and `overview_map.py`
+### Summary table and map
 
 ```bash
-python summarize.py --tidy-dir tidy --map overview_map.png
+arrabida-summary --tidy-dir tidy --map overview_map.png
 ```
 
-prints the summary table and draws the map in `figures/overview_map.png`: dive tracks on the left, quadrats by campaign (colour) and stratum (shape) with the sonde stations on the right. The map is drawn from the tidy files alone and carries no third-party imagery. `overview_map.py` can also be run on its own.
+prints the summary table and draws the map shown above: dive tracks on the left, quadrats by campaign (colour) and stratum (shape) with the sonde stations on the right. The map is drawn from the tidy files alone and carries no third-party imagery. `arrabida-map` draws it on its own.
 
-### `check_positions.py`
+### Position check
 
 ```bash
-python check_positions.py --record record
-python check_positions.py --record record --lidar emodnet_hr_lidar_sesimbra.tif --out position_qc_rebuilt.csv
+arrabida-check-positions --record record
+arrabida-check-positions --record record --lidar emodnet_hr_lidar_sesimbra.tif --out position_qc_rebuilt.csv
 ```
 
 The first form recomputes every residual and status of the archived `position_qc.csv` from the lidar samples and modelled water levels stored in `position_qc_provenance.json` and reports whether they agree (81 consistent, 5 depth mismatches, 4 without bathymetry in release 1.0.0). The second form also samples the EMODnet lidar raster at the quadrat positions (containing cell, and the finite range of the surrounding 3 × 3 cells), rebuilds the table and compares it with the archived one. The raster is not part of the record: it is the `590_HR_Lidar_Sul` model of EMODnet Bathymetry, clipped to the site, depths positive downwards relative to LAT. The check tests agreement with the nominal depth labels, not the accuracy of the positions.
 
-### `pack_photographs.py`
+### Photographs
 
 ```bash
-python pack_photographs.py --july <July folder> --september <September folder> --out record --tidy-dir record
+arrabida-pack-photos --july <July folder> --september <September folder> --out record --tidy-dir record
 ```
 
-reads the two photograph folders as CCMAR delivered them, names each file by quadrat (July) or by capture order within its transect (September), reads camera, lens and capture time from the EXIF of each JPEG and ARW, writes the three archives without recompression and `photographs.csv`, and runs the checks of the record. `photo_sources.csv` pins the size and SHA-256 of every delivered file, so a rerun confirms it packed the same ones.
+reads the two photograph folders as CCMAR delivered them, names each file by quadrat (July) or by capture order within its transect (September), reads camera, lens and capture time from the EXIF of each JPEG and ARW, writes the three archives without recompression and `photographs.csv`, and runs the checks of the record. `photo_sources.csv`, shipped with the package, pins the size and SHA-256 of every delivered file, so a rerun confirms it packed the same ones.
+
+### Tests
+
+```bash
+pip install -e ".[all,dev]"
+ruff check .
+pytest
+```
+
+The unit tests need no data. The tests in `tests/test_record.py` compare the output of the scripts with the files of the record; `tests/conftest.py` sets where those files come from. Changes are listed in `CHANGELOG.md`.
 
 ## Licence and citation
 

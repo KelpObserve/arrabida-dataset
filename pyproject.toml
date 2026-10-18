@@ -1,0 +1,59 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "arrabida-dataset"
+version = "1.0.0"
+description = "Companion scripts of the KelpObserve Sesimbra 2026 dataset: tidy tables, summary, overview map, position check and photograph packing"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Andrei Rusu" }]
+keywords = ["kelp", "Saccorhiza polyschides", "quadrat survey", "multiparameter sonde", "Sesimbra", "Arrábida", "AQUASERV", "KelpObserve"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: GIS",
+]
+dependencies = [
+    "pandas>=3.0.5",
+    "numpy>=2.4",
+    "openpyxl>=3.1.5",
+    "geopandas>=1.1",
+    "pyogrio>=0.13",
+    "shapely>=2.1",
+    "pyproj>=3.7",
+]
+
+[project.optional-dependencies]
+map = ["matplotlib>=3.11"]
+photos = ["Pillow>=12"]
+lidar = ["rasterio>=1.4"]
+all = ["arrabida-dataset[map,photos,lidar]"]
+dev = ["pytest>=8", "ruff==0.17.1"]
+
+[project.scripts]
+arrabida-tidy = "arrabida_dataset.make_tidy_tables:main"
+arrabida-summary = "arrabida_dataset.summarize:main"
+arrabida-map = "arrabida_dataset.overview_map:main"
+arrabida-check-positions = "arrabida_dataset.check_positions:main"
+arrabida-pack-photos = "arrabida_dataset.pack_photographs:main"
+
+[project.urls]
+Repository = "https://github.com/KelpObserve/arrabida-dataset"
+Dataset = "https://doi.org/10.5281/zenodo.23282075"
+Videos = "https://doi.org/10.5281/zenodo.23350632"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/arrabida_dataset"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"

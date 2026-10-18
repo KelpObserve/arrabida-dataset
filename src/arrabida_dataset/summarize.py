@@ -5,7 +5,7 @@ per-campaign table: quadrats surveyed, quadrats with kelp recorded, individuals 
 mean cover per stratum and sonde casts. Mean cover counts a quadrat without kelp as 0 %
 (column cover_pct) and leaves out the one quadrat whose cover is blank.
 
-    python summarize.py --tidy-dir tidy [--map overview_map.png]
+    arrabida-summary --tidy-dir tidy [--map overview_map.png]
 """
 
 from __future__ import annotations
@@ -57,7 +57,7 @@ def main() -> int:
     args = parser.parse_args()
     print(summary_table(args.tidy_dir))
     if args.map:
-        from overview_map import draw
+        from arrabida_dataset.overview_map import draw
 
         draw(args.tidy_dir, args.map)
         print(f"\nwrote {args.map}")
