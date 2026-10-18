@@ -6,3 +6,9 @@ geopandas==1.1.4
 pyogrio==0.13.0
 shapely==2.1.2
 pyproj==3.7.2
+# overview_map.py and summarize.py
+matplotlib==3.11.1
+# pack_photographs.py
+Pillow==12.3.0
+# check_positions.py, lidar sampling only
+rasterio==1.5.1

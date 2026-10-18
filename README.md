@@ -1,158 +1,146 @@
-# KelpObserve Sesimbra 2026: tidy tables
+# KelpObserve Sesimbra 2026: dataset companion scripts
 
-`make_tidy_tables.py` builds the six tidy tables of the dataset *KelpObserve Sesimbra 2026: diver
-quadrat surveys of the kelp* Saccorhiza polyschides *and water-column sonde profiles, Arrábida
-coast, Portugal* (version 1.0.0, Zenodo,
-[doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)) from the five files that
-CCMAR delivered.
+Companion repository of the dataset *KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp* Saccorhiza polyschides *and water-column sonde profiles, Arrábida coast, Portugal* (version 1.0.0, Zenodo, [doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)). It holds the scripts that derive the dataset's tidy tables from the files CCMAR delivered, pack the photographs, check the quadrat positions against bathymetry and draw the overview map, together with a summary of what the record contains. The transect and mapping videos are in a companion record, [doi:10.5281/zenodo.23350632](https://doi.org/10.5281/zenodo.23350632).
 
-```bash
-python make_tidy_tables.py --raw-dir raw --out-dir tidy
-```
+KelpObserve is an AQUASERV Transnational Access project (PID 42082) hosted by CCMAR (Centro de Ciências do Mar do Algarve, Universidade do Algarve, Faro, Portugal).
 
-The repository holds the script, `requirements.txt`, `LICENSE` (Apache 2.0), `CITATION.cff` and
-`.python-version` (3.12). The Zenodo record links here for the script, and its
-`release_provenance.json` records the SHA-256 of the script version that built release 1.0.0.
-The transect and mapping videos are in a companion record,
-[doi:10.5281/zenodo.23350632](https://doi.org/10.5281/zenodo.23350632).
+## The dataset
 
-Pine View Software AS (Pineview, Norway) wrote the script for KelpObserve, an AQUASERV
-Transnational Access project (PID 42082) hosted by CCMAR (Centro de Ciências do Mar do Algarve,
-Universidade do Algarve, Faro, Portugal).
+Field observations from three campaigns in 2026 (June, July and September) at one site with infralittoral rock habitat on the Arrábida coast of Portugal. The site is about 1.4 km east-south-east of the Cabo Espichel lighthouse (Sesimbra; 38.409° N, 9.202° W), inside the Professor Luiz Saldanha Marine Park. The observations were collected as reference data for mapping kelp habitat from satellite imagery.
 
-## Inputs
+- **Kelp quadrats.** 90 quadrats of 0.5 × 0.5 m along 18 transects in two depth strata. In each quadrat the divers recorded the cover of the annual kelp *Saccorhiza polyschides* and counted and measured its individuals (242 in all).
+- **Sonde casts.** A multiparameter sonde (YSI EXO2) was lowered at the dive stations 7 times and logged 1,390 samples of temperature, salinity, dissolved oxygen, pH, fluorescence and turbidity.
+- **Positions and tracks.** The recorded position of every quadrat, and one GPS track of the divers' surface float per campaign.
+- **Quadrat photographs.** One photograph of each July quadrat (30 JPEG) and 33 frames of the September quadrats with their raw files (33 JPEG and 33 ARW). June has none.
+- **Videos.** 20 transect and mapping videos, 77 minutes in all, in the companion record.
 
-Download the five delivered files from the Zenodo record into one folder, keeping the names they
-carry there. The record holds release copies of the CCMAR delivery, with the scientific content
-unchanged.
+In each campaign three transects were laid in a shallow stratum (nominal depth 6 to 8 m) and three in a deep stratum (nominal depth 15 to 17 m), with five quadrats along each 20 m transect tape: 30 quadrats per campaign. Transects were laid anew in each campaign, so a quadrat number does not identify a fixed place. Cover was estimated by eye in the water; sizes are in cm, with a juvenile mark below 30 cm. No destructive sampling was made.
 
-| File | Contents |
-| --- | --- |
-| `raw_ccmar_kelp_quadrats_2026.xlsx` | kelp workbook |
-| `raw_ccmar_sonde_casts_2026.xlsx` | sonde workbook |
-| `raw_ccmar_quadrat_positions_2026.gpkg` | quadrat positions |
-| `raw_ccmar_quadrat_positions_july_dive_log.gpkg` | timed July dive log |
-| `raw_ccmar_dive_tracks_2026.gpkg` | dive tracks |
+| | June | July | September |
+|---|---|---|---|
+| Quadrats surveyed | 30 | 30 | 30 |
+| Quadrats with kelp recorded | 29 | 24 | 20 |
+| Kelp individuals measured | 135 | 69 | 38 |
+| Mean cover, shallow stratum (%) | 23.0 | 70.0 | 18.3 |
+| Mean cover, deep stratum (%) | 19.1 | 26.0 | 3.6 |
+| Sonde casts | 3 | 2 | 2 |
 
-## Requirements
+Mean cover counts a quadrat without kelp as 0 %; the one September quadrat without a cover value is left out.
 
-The script needs Python 3.10 or later with pandas, openpyxl, geopandas (pyogrio) and pyproj.
-`requirements.txt` pins the versions used to build release 1.0.0 under Python 3.12.0: pandas
-3.0.5, numpy 2.5.1, openpyxl 3.1.5, geopandas 1.1.4, pyogrio 0.13.0, shapely 2.1.2 and pyproj
-3.7.2.
+![Quadrats, sonde stations and dive tracks](figures/overview_map.png)
 
-## Run
+## What the record contains
 
-With the five files in `raw/`:
+Tidy tables, the place to start:
+
+| File | Rows | Content |
+|---|---|---|
+| `kelp_quadrats.csv` | 90 | One row per surveyed quadrat: position, dates, kelp cover and counts. |
+| `kelp_quadrats.geojson` | 90 | The same rows as points, for GIS. |
+| `kelp_individuals.csv` | 242 | One row per kelp individual: life stage and size. |
+| `sonde_casts.csv` | 7 | One row per sonde cast: station, date, time and depth range. |
+| `sonde_profiles.csv` | 1,390 | One row per sonde sample, all channels. |
+| `dive_tracks.geojson` | 3 | One GPS track of the divers' surface float per campaign. |
+
+Release copies of the five delivered files, with the scientific content unchanged:
+
+| File | Content |
+|---|---|
+| `raw_ccmar_kelp_quadrats_2026.xlsx` | Kelp workbook: one row per kelp individual or empty quadrat, all three campaigns. |
+| `raw_ccmar_sonde_casts_2026.xlsx` | Sonde workbook: every sample of the seven casts, as exported from the instrument. |
+| `raw_ccmar_quadrat_positions_2026.gpkg` | Quadrat positions of all three campaigns (90 points). |
+| `raw_ccmar_quadrat_positions_july_dive_log.gpkg` | July delivery of the positions, with the timed dive log: date, time and tape mark of each July quadrat. |
+| `raw_ccmar_dive_tracks_2026.gpkg` | GPS tracks of the surface float, one per campaign. |
+
+The photographs come in three ZIP archives (3.7 GB, stored without recompression) described file by file in `photographs.csv`. The documentation consists of the record's `README.md`, `data_dictionary.csv` (every column: type, unit, description, limits), `datapackage.json` (the same as a Frictionless Data Package), `raw_ccmar_manifest.csv`, `release_provenance.json`, the position check in `position_qc.csv` and `position_qc_provenance.json`, `overview_map.png`, `CITATION.cff`, `LICENSE.txt` and `checksums.sha256`.
+
+### Before using the data
+
+The record's README lists twenty known issues. The ones that matter most for reuse:
+
+- **Survey dates differ between the delivered files.** `survey_date` gives the supported day for each quadrat (2 June; 7 July for shallow transects 1 and 2 and 8 July for the other July transects; 2 September) and `survey_date_evidence` states its basis. Use it for temporal matching.
+- **Positions come from a towed surface float.** A recorded position can lie 10 m or more from the quadrat. Nine quadrats could not be reconciled with the lidar bathymetry at their recorded position; `position_check` holds the outcome.
+- **Depth labels are nominal**, differ between the workbook and the position file, and are not measured depths of the quadrats.
+- **September cover cells are blank** where June and July record 0. `cover_pct` holds 0 for all quadrats without kelp; `cover_pct_recorded` keeps the blank.
+- **Sonde values are as delivered.** Calibration records were not supplied, turbidity and three computed channels contain negative values, and the clock's time zone is not stated.
+- **One site, one summer.** The quadrats support comparisons between the three campaigns and the two strata at this site. They are not a habitat map.
+
+## Scripts
+
+All scripts read the files of the Zenodo record and write their results next to them. Each one, run on the files of release 1.0.0, reproduces the corresponding file of the record byte for byte. Install the pinned dependencies first:
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+| Script | Reads | Writes |
+|---|---|---|
+| `make_tidy_tables.py` | the five delivered files | the six tidy tables |
+| `summarize.py` | the tidy tables | the per-campaign summary table above, and the map on request |
+| `overview_map.py` | `kelp_quadrats.csv`, `sonde_casts.csv`, `dive_tracks.geojson` | `overview_map.png` |
+| `check_positions.py` | `position_qc.csv`, `position_qc_provenance.json`, `kelp_quadrats.csv`, optionally the EMODnet lidar raster | a verdict on the archived position check, optionally a rebuilt table |
+| `pack_photographs.py` | the two delivered photograph folders | the three ZIP archives and `photographs.csv` |
+
+### `make_tidy_tables.py`
+
+Download the five delivered files from the Zenodo record into one folder, keeping their names, then:
+
+```bash
 python make_tidy_tables.py --raw-dir raw --out-dir tidy
 ```
 
-The six tidy files are written to `tidy/`.
-
-## Outputs
-
-| File | One record per | Records |
-| --- | --- | --- |
-| `kelp_quadrats.csv` | surveyed quadrat | 90 rows |
-| `kelp_quadrats.geojson` | surveyed quadrat: the rows of `kelp_quadrats.csv` as points | 90 points |
-| `kelp_individuals.csv` | measured kelp individual | 242 rows |
-| `sonde_casts.csv` | sonde cast | 7 rows |
-| `sonde_profiles.csv` | sonde sample | 1,390 rows |
-| `dive_tracks.geojson` | campaign: the GPS track of the divers' surface float | 3 tracks |
-
-The record's `README.md` and `data_dictionary.csv` document every column of these files and every
-known issue of the data.
-
-### What the script does
-
-- Renames columns.
-- Groups the rows of the kelp workbook into quadrats by date, depth, transect and quadrat number.
-  Each measured individual becomes one row of `kelp_individuals.csv`; the per-quadrat cover,
-  erosion and epibiont values go to `kelp_quadrats.csv`.
-- Joins each quadrat to the position with the same campaign, stratum, transect and quadrat number.
-  The kelp workbook and the position file label the strata with different depths, so the join key
-  is the stratum.
+- Groups the rows of the kelp workbook into quadrats by date, depth, transect and quadrat number. Each measured individual becomes one row of `kelp_individuals.csv`; the per-quadrat cover, erosion and epibiont values go to `kelp_quadrats.csv`.
+- Joins each quadrat to the position with the same campaign, stratum, transect and quadrat number. The two files label the strata with different depths, so the join key is the stratum.
 - Adds the date, time and tape mark of each July quadrat from the timed dive log.
-- Swaps the sonde dates back from their day-first storage, and marks the profile leg of each cast:
-  the samples between its shallowest and deepest reading.
+- Swaps the sonde dates back from their day-first storage and marks the profile leg of each cast: the samples between its shallowest and deepest reading.
 - Rounds the dive-track coordinates to seven decimals and drops their Z values.
-- Adds `survey_date` and `survey_date_evidence` from the campaign chronology, which is encoded
-  explicitly in the function `survey_date()`, and retains the source date fields.
+- Adds `survey_date` and `survey_date_evidence` from the campaign chronology, which is encoded explicitly in the function `survey_date()`, and retains the source date fields.
 
-Nothing is modelled, interpolated, offset, filtered or binned, and no observation is removed.
+Nothing is modelled, interpolated, offset, filtered or binned, and no observation is removed. The record's `checksums.sha256` lists the SHA-256 of each tidy file and its `release_provenance.json` records the SHA-256 of the script version used, so a rebuilt set can be checked with `shasum -a 256` (`sha256sum` on Linux).
 
-## Verify
-
-The SHA-256 of this version of `make_tidy_tables.py` is
-`7795d780d768da55f956509a1519bbc4510c2b12ee8249f6b9bc84509a35d4fd`. Compare it with the value in
-the record's `release_provenance.json`:
+### `summarize.py` and `overview_map.py`
 
 ```bash
-shasum -a 256 make_tidy_tables.py
+python summarize.py --tidy-dir tidy --map overview_map.png
 ```
 
-Run on the five files of release 1.0.0, the script reproduces the six tidy files byte for byte.
-Their SHA-256 values are also listed in the record's `checksums.sha256`. To check the rebuilt
-files:
+prints the summary table and draws the map in `figures/overview_map.png`: dive tracks on the left, quadrats by campaign (colour) and stratum (shape) with the sonde stations on the right. The map is drawn from the tidy files alone and carries no third-party imagery. `overview_map.py` can also be run on its own.
+
+### `check_positions.py`
 
 ```bash
-cd tidy
-shasum -a 256 -c <<'EOF'
-f79ad2d68b5a01d84c507745978b9f0c2d5f2b259e6ea215f5f3371e963f9e56  kelp_quadrats.csv
-80d51420b50872fcdb06f8a2377ffe4dae7712826e3e4666e236eb691321c80e  kelp_quadrats.geojson
-266629ea8fd8f7070b5aa236030ef679d912bf1eae9f44f76845f5328d4f09b8  kelp_individuals.csv
-a6499e905dc1e4cf8e7a4360ca2005e5ba86bd8c6338987f0e2e24e461f227a0  sonde_casts.csv
-810753bb36816d2a156810d3292cf8876645d93db2ed6ce4cae69d6018eb261a  sonde_profiles.csv
-39545eb03d45f11c3dc4e84c3448d69a7e7ada0c1e2aa73d74b48108c903e50d  dive_tracks.geojson
-EOF
+python check_positions.py --record record
+python check_positions.py --record record --lidar emodnet_hr_lidar_sesimbra.tif --out position_qc_rebuilt.csv
 ```
 
-Each matching file prints `OK`. On Linux, `sha256sum -c` reads the same input.
+The first form recomputes every residual and status of the archived `position_qc.csv` from the lidar samples and modelled water levels stored in `position_qc_provenance.json` and reports whether they agree (81 consistent, 5 depth mismatches, 4 without bathymetry in release 1.0.0). The second form also samples the EMODnet lidar raster at the quadrat positions (containing cell, and the finite range of the surrounding 3 × 3 cells), rebuilds the table and compares it with the archived one. The raster is not part of the record: it is the `590_HR_Lidar_Sul` model of EMODnet Bathymetry, clipped to the site, depths positive downwards relative to LAT. The check tests agreement with the nominal depth labels, not the accuracy of the positions.
 
-## Not in this repository
+### `pack_photographs.py`
 
-- The data files. The five inputs and the six tidy files are in the Zenodo record.
-- The packing of the quadrat photographs, the bathymetric position check (`position_qc.csv`), the
-  overview map and the generation of the record's documentation. Other Pineview tooling produced
-  them; none of them is needed to rebuild the tidy tables.
+```bash
+python pack_photographs.py --july <July folder> --september <September folder> --out record --tidy-dir record
+```
+
+reads the two photograph folders as CCMAR delivered them, names each file by quadrat (July) or by capture order within its transect (September), reads camera, lens and capture time from the EXIF of each JPEG and ARW, writes the three archives without recompression and `photographs.csv`, and runs the checks of the record. `photo_sources.csv` pins the size and SHA-256 of every delivered file, so a rerun confirms it packed the same ones.
 
 ## Licence and citation
 
-The code is released under the Apache License 2.0 (see `LICENSE`).
-The data are licensed CC BY 4.0 under the Zenodo record.
+The code is released under the Apache License 2.0 (see `LICENSE`). The data are licensed CC BY 4.0 under the Zenodo record.
 
 Cite the data as:
 
-> Rusu, A., Botezat, O., Paulo, D., Encarnação, J., Rosado, G. (2026). KelpObserve Sesimbra 2026:
-> diver quadrat surveys of the kelp Saccorhiza polyschides and water-column sonde profiles,
-> Arrábida coast, Portugal (Version 1.0.0) [Data set]. Zenodo.
-> https://doi.org/10.5281/zenodo.23282075
+> Rusu, A., Botezat, O., Paulo, D., Encarnação, J., Rosado, G. (2026). KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp Saccorhiza polyschides and water-column sonde profiles, Arrábida coast, Portugal (Version 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.23282075
 
 `CITATION.cff` gives the citation for the software.
 
 ## Credits
 
-The CCMAR Scientific Dive Centre (Diogo Paulo, João Encarnação, Guilherme Rosado) made the field
-surveys. The dataset's creators are Andrei Rusu and Oana Botezat (Pine View Software AS) and Diogo
-Paulo, João Encarnação and Guilherme Rosado (CCMAR). Pine View Software AS wrote the script.
-
-Contact: Andrei Rusu, Pine View Software AS.
+The field surveys were performed by the CCMAR Scientific Dive Centre (Diogo Paulo, João Encarnação, Guilherme Rosado).
 
 ## Funding
 
-The project leading to these results has received funding from the European Union's Horizon
-Europe research and innovation programme under grant agreement No 101131121 (AQUASERV), through
-Transnational Access project PID 42082 (KelpObserve) hosted by CCMAR. This study received support
-from the Portuguese node of EMBRC-ERIC, specifically EMBRC.PT ALG-01-0145-FEDER-022121. This output
-reflects only the authors' view and the European Union cannot be held responsible for any use that
-may be made of the information contained therein.
+The project leading to these results has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No 101131121 (AQUASERV), through Transnational Access project PID 42082 (KelpObserve) hosted by CCMAR. This output reflects only the authors' view and the European Union cannot be held responsible for any use that may be made of the information contained therein.
 
-AQUASERV Transnational Access supported access to the coastal study site and field services
-provided by CCMAR, together with travel and accommodation for Pineview staff. Subsequent
-KelpObserve data processing and analysis, software development, and preparation of the research
-outputs were carried out by Pineview through its own in-kind contribution.
+AQUASERV Transnational Access supported access to the coastal study site and field services provided by CCMAR, together with travel and accommodation for Pineview staff. Subsequent KelpObserve data processing and analysis, software development, and preparation of the research outputs were carried out by Pineview through its own in-kind contribution.

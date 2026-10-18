@@ -10,10 +10,9 @@ carry in the Zenodo record, and writes the six tidy files of that record:
     sonde_profiles.csv      one row per sonde sample
     dive_tracks.geojson     one GPS track per campaign (3)
 
-Nothing is modelled or interpolated. The script renames columns, joins the quadrat
-positions to the quadrat records, swaps the sonde dates back from their day-first storage,
-adds the evidence-based survey chronology while retaining the source date fields. README.md in
-the record describes every column and every known issue.
+The script renames columns, joins the quadrat positions to the quadrat records, swaps the sonde dates back from their day-first storage,
+adds the evidence-based survey chronology while retaining the source date fields. 
+README.md in the record describes every column and every known issue.
 
 Run next to the delivered files::
 
@@ -91,6 +90,7 @@ KELP_COLUMNS = [
     "Notes",
 ]
 JUVENILE, ADULT, COVER = "Juvenile (< 30cm)", "Adult (>= 30cm)", "% cover"
+
 
 # Outcome of the depth check on the recorded positions (README, known issue 3). The check
 # compares each quadrat's nominal depth with the 2011 lidar bathymetry at its recorded
