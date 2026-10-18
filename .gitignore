@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Working folders of make_tidy_tables.py
+raw/
+tidy/

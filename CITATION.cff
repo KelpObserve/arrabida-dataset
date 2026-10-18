@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+message: "If you use this script, cite the dataset it builds and this repository as below."
+type: software
+title: "make_tidy_tables.py: tidy tables of the KelpObserve Sesimbra 2026 field dataset"
+version: "1.0.0"
+license: Apache-2.0
+repository-code: "https://github.com/KelpObserve/arrabida-dataset"
+abstract: "Derives the six tidy tables of the KelpObserve Sesimbra 2026 dataset (diver quadrat surveys of the kelp Saccorhiza polyschides, sonde casts, quadrat positions and dive tracks) from the five files delivered by CCMAR, without modelling, interpolation or removal of observations."
+authors:
+  - family-names: "Rusu"
+    given-names: "Andrei"
+    affiliation: "Pine View Software AS (Pineview), Norway"
+    orcid: "https://orcid.org/0009-0000-1219-4816"
+keywords:
+  - "kelp"
+  - "Saccorhiza polyschides"
+  - "quadrat survey"
+  - "multiparameter sonde"
+  - "data processing"
+  - "tidy data"
+  - "Sesimbra"
+  - "Portugal"
+  - "AQUASERV"
+  - "KelpObserve"
+references:
+  - type: data
+    title: "KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp Saccorhiza polyschides and water-column sonde profiles, Arrábida coast, Portugal"
+    version: "1.0.0"
+    doi: 10.5281/zenodo.23282075
+    license: CC-BY-4.0
+    authors:
+      - family-names: "Rusu"
+        given-names: "Andrei"
+        orcid: "https://orcid.org/0009-0000-1219-4816"
+      - family-names: "Botezat"
+        given-names: "Oana"
+      - family-names: "Paulo"
+        given-names: "Diogo"
+        orcid: "https://orcid.org/0000-0001-9061-6850"
+      - family-names: "Encarnação"
+        given-names: "João"
+        orcid: "https://orcid.org/0000-0003-2105-6639"
+      - family-names: "Rosado"
+        given-names: "Guilherme"
