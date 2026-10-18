@@ -1,6 +1,6 @@
-# KelpObserve Sesimbra 2026: dataset companion scripts
+# KelpObserve Sesimbra 2026: processing software for the diver surveys of *Saccorhiza polyschides* kelp, Arrábida coast, Portugal
 
-Companion repository of the dataset *KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp* Saccorhiza polyschides *and water-column sonde profiles, Arrábida coast, Portugal* (version 1.0.0, Zenodo, [doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)). It holds the scripts that derive the dataset's tidy tables from the files CCMAR delivered, pack the photographs, check the quadrat positions against bathymetry and draw the overview map, together with a summary of what the record contains. The transect and mapping videos are in a companion record, [doi:10.5281/zenodo.23350632](https://doi.org/10.5281/zenodo.23350632).
+Companion repository of the dataset *KelpObserve Sesimbra 2026: diver quadrat surveys of* Saccorhiza polyschides *kelp and water-column sonde profiles, Arrábida coast, Portugal* (version 1.0.0, Zenodo, [doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)). It holds the Python package that derives the dataset's tidy tables from the files CCMAR delivered, packs the photographs, checks the quadrat positions against bathymetry and draws the overview map, together with a summary of what the record contains. The transect and mapping videos are in a companion record, [doi:10.5281/zenodo.23350632](https://doi.org/10.5281/zenodo.23350632).
 
 KelpObserve is an AQUASERV Transnational Access project (PID 42082) hosted by CCMAR (Centro de Ciências do Mar do Algarve, Universidade do Algarve, Faro, Portugal).
 
@@ -65,9 +65,9 @@ The record's README lists twenty known issues. The ones that matter most for reu
 - **Sonde values are as delivered.** Calibration records were not supplied, turbidity and three computed channels contain negative values, and the clock's time zone is not stated.
 - **One site, one summer.** The quadrats support comparisons between the three campaigns and the two strata at this site. They are not a habitat map.
 
-## Scripts
+## Software
 
-The scripts form the Python package `arrabida_dataset`. Each one, run on the files of release 1.0.0, reproduces the corresponding file of the record byte for byte.
+The software is the Python package `arrabida_dataset`. Each of its commands, run on the files of release 1.0.0, reproduces the corresponding file of the record byte for byte.
 
 ### Installation
 
@@ -144,7 +144,7 @@ ruff check .
 pytest
 ```
 
-The unit tests need no data. The tests in `tests/test_record.py` compare the output of the scripts with the files of the record; `tests/conftest.py` sets where those files come from. Changes are listed in `CHANGELOG.md`.
+The unit tests need no data. The tests in `tests/test_record.py` compare the output of the commands with the files of the record; `tests/conftest.py` sets where those files come from. Changes are listed in `CHANGELOG.md`.
 
 ## Licence and citation
 
@@ -152,7 +152,7 @@ The code is released under the Apache License 2.0 (see `LICENSE`). The data are 
 
 Cite the data as:
 
-> Rusu, A., Botezat, O., Paulo, D., Encarnação, J., Rosado, G. (2026). KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp Saccorhiza polyschides and water-column sonde profiles, Arrábida coast, Portugal (Version 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.23282075
+> Rusu, A., Botezat, O., Paulo, D., Encarnação, J., Rosado, G. (2026). KelpObserve Sesimbra 2026: diver quadrat surveys of Saccorhiza polyschides kelp and water-column sonde profiles, Arrábida coast, Portugal (Version 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.23282075
 
 `CITATION.cff` gives the citation for the software.
 
@@ -162,6 +162,6 @@ The field surveys were performed by the CCMAR Scientific Dive Centre (Diogo Paul
 
 ## Funding
 
-The project leading to these results has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No 101131121 (AQUASERV), through Transnational Access project PID 42082 (KelpObserve) hosted by CCMAR. This output reflects only the authors' view and the European Union cannot be held responsible for any use that may be made of the information contained therein.
+The project leading to these results has received funding from the European Union's Horizon Europe research and innovation programme under grant agreement No 101131121 (AQUASERV), through Transnational Access project PID 42082 (KelpObserve) hosted by CCMAR. This study received support from the Portuguese node of EMBRC-ERIC, specifically EMBRC.PT ALG-01-0145-FEDER-022121. This output reflects only the authors' view and the European Union cannot be held responsible for any use that may be made of the information contained therein.
 
 AQUASERV Transnational Access supported access to the coastal study site and field services provided by CCMAR, together with travel and accommodation for Pineview staff. Subsequent KelpObserve data processing and analysis, software development, and preparation of the research outputs were carried out by Pineview through its own in-kind contribution.

@@ -1,6 +1,6 @@
 # Changelog
 
-Versions follow the releases of the dataset on Zenodo ([doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)): version 1.0.0 of the scripts builds release 1.0.0 of the dataset.
+Versions follow the releases of the dataset on Zenodo ([doi:10.5281/zenodo.23282075](https://doi.org/10.5281/zenodo.23282075)): version 1.0.0 of the software builds release 1.0.0 of the dataset.
 
 ## 1.0.0
 

@@ -1,11 +1,11 @@
 cff-version: 1.2.0
-message: "If you use this script, cite the dataset it builds and this repository as below."
+message: "If you use this software, cite the dataset it builds and this repository as below."
 type: software
-title: "KelpObserve Sesimbra 2026: dataset companion scripts"
+title: "KelpObserve Sesimbra 2026: processing software for the diver surveys of Saccorhiza polyschides kelp, Arrábida coast, Portugal"
 version: "1.0.0"
 license: Apache-2.0
 repository-code: "https://github.com/KelpObserve/arrabida-dataset"
-abstract: "Companion scripts of the KelpObserve Sesimbra 2026 dataset (diver quadrat surveys of the kelp Saccorhiza polyschides, sonde casts, quadrat positions and dive tracks): derivation of the tidy tables from the files delivered by CCMAR, packing of the quadrat photographs, position check against lidar bathymetry, summary table and overview map. Each script reproduces the corresponding file of release 1.0.0 byte for byte."
+abstract: "Processing software of the KelpObserve Sesimbra 2026 dataset (diver quadrat surveys of Saccorhiza polyschides kelp, sonde casts, quadrat positions and dive tracks): derivation of the tidy tables from the files delivered by CCMAR, packing of the quadrat photographs, position check against lidar bathymetry, summary table and overview map. Each script reproduces the corresponding file of release 1.0.0 byte for byte."
 authors:
   - family-names: "Rusu"
     given-names: "Andrei"
@@ -24,7 +24,7 @@ keywords:
   - "KelpObserve"
 references:
   - type: data
-    title: "KelpObserve Sesimbra 2026: diver quadrat surveys of the kelp Saccorhiza polyschides and water-column sonde profiles, Arrábida coast, Portugal"
+    title: "KelpObserve Sesimbra 2026: diver quadrat surveys of Saccorhiza polyschides kelp and water-column sonde profiles, Arrábida coast, Portugal"
     version: "1.0.0"
     doi: 10.5281/zenodo.23282075
     license: CC-BY-4.0

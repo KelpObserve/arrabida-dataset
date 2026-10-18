@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "arrabida-dataset"
 version = "1.0.0"
-description = "Companion scripts of the KelpObserve Sesimbra 2026 dataset: tidy tables, summary, overview map, position check and photograph packing"
+description = "Processing software of the KelpObserve Sesimbra 2026 dataset: tidy tables, summary, overview map, position check and photograph packing"
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
