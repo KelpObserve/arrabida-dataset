@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "arrabida-dataset"
-version = "1.0.0"
+version = "1.1.0"
 description = "Processing software of the KelpObserve Sesimbra 2026 dataset: tidy tables, summary, overview map, position check and photograph packing"
 readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
-authors = [{ name = "Andrei Rusu" }]
+authors = [{ name = "Andrei Rusu" }, { name = "Oana Botezat" }]
 keywords = ["kelp", "Saccorhiza polyschides", "quadrat survey", "multiparameter sonde", "Sesimbra", "Arrábida", "AQUASERV", "KelpObserve"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -44,6 +44,7 @@ arrabida-pack-photos = "arrabida_dataset.pack_photographs:main"
 
 [project.urls]
 Repository = "https://github.com/KelpObserve/arrabida-dataset"
+Software = "https://doi.org/10.5281/zenodo.24199215"
 Dataset = "https://doi.org/10.5281/zenodo.23282075"
 Videos = "https://doi.org/10.5281/zenodo.23350632"
 

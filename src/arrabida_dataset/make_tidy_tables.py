@@ -7,7 +7,7 @@ carry in the Zenodo record, and writes the six tidy files of that record:
     kelp_quadrats.geojson   the same rows as points
     kelp_individuals.csv    one row per measured kelp individual
     sonde_casts.csv         one row per sonde cast (7)
-    sonde_profiles.csv      one row per sonde sample
+    sonde_profiles.csv      one row per sonde sample, the six variables CCMAR releases
     dive_tracks.geojson     one GPS track per campaign (3)
 
 The script renames columns, joins the quadrat positions to the quadrat records, swaps the sonde dates back from their day-first storage,
@@ -178,35 +178,24 @@ INDIVIDUAL_INTEGERS = [
     "workbook_row",
 ]
 
-# Sonde sheet headers, reduced to their ASCII words by ``header_key``, and the tidy column
+# The sonde workbook as CCMAR curated it for release holds a description sheet and, second,
+# the report sheet with the six variables CCMAR releases. Its column headers are in row 4.
+SONDE_REPORT_SHEET = 1
+SONDE_HEADER_ROW = 3
+# Report sheet headers, reduced to their ASCII words by ``header_key``, and the tidy column
 # each becomes. The order here is the column order of sonde_profiles.csv.
 SONDE_CHANNELS = {
     "Depth m": "depth_m",
     "Temp C": "temperature_c",
-    "Sal psu": "salinity_psu",
-    "Cond uS/cm": "conductivity_us_cm",
-    "Sp Cond uS/cm": "specific_conductance_us_cm",
-    "nLFCond uS/cm": "nlf_conductivity_us_cm",
-    "TDS mg/L": "tds_mg_l",
-    "Resistivity ohms-cm": "resistivity_ohm_cm",
-    "Water Density Sigma": "sigma_kg_m3",
-    "Water Density Sigma-T": "sigma_t_kg_m3",
+    "Sal PSU": "salinity_psu",
     "DO % Sat": "do_pct_sat",
-    "DO % CB": "do_pct_cb",
-    "DO mg/L": "do_mg_l",
-    "pH pH": "ph",
-    "pH mV": "ph_mv",
-    "Chlorophyll RFU": "chlorophyll_rfu",
-    "Chlorophyll ug/L": "chlorophyll_ug_l",
-    "Phycoerythrin RFU": "phycoerythrin_rfu",
-    "Phycoerythrin ug/L": "phycoerythrin_ug_l",
-    "fDOM RFU": "fdom_rfu",
-    "fDOM QSU": "fdom_qsu",
-    "Turbidity FNU": "turbidity_fnu",
+    "DO mg L": "do_mg_l",
+    "pH": "ph",
 }
+SONDE_SITE = "Site Name MonthYear Day Deph"
 SONDE_LEADING = [
-    "Project",
-    "Site Name",
+    "Project Code",
+    SONDE_SITE,
     "GPS Lat",
     "GPS Long",
     "Date MM/DD/YYYY",
@@ -576,12 +565,8 @@ def individual_table(individuals: list[dict], quadrats: pd.DataFrame) -> pd.Data
 
 
 def header_key(header: Any) -> str:
-    """ASCII words of a sheet header: 'Cond ( µS/cm )' becomes 'Cond uS/cm'.
-
-    The temperature header carries a mis-encoded degree sign; this drops it.
-    """
-    text = str(header).replace("µ", "u").replace("μ", "u")
-    return " ".join(re.findall(r"[A-Za-z0-9%/-]+", text))
+    """ASCII words of a sheet header: 'DO (mg L⁻¹)' becomes 'DO mg L' and 'Temp ( ºC )' 'Temp C'."""
+    return " ".join(re.findall(r"[A-Za-z0-9%/-]+", str(header)))
 
 
 def clock(value: Any) -> dt.time:
@@ -623,9 +608,13 @@ def profile_leg(depths: list[float]) -> tuple[int, int, str]:
     return deepest, shallowest, "up"
 
 
-def sonde_tables(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """The cast table and the sample table, from the sonde workbook."""
-    sheet = pd.read_excel(path, sheet_name=0, header=2)
+def read_sonde_report(path: Path) -> pd.DataFrame:
+    """The report sheet of the sonde workbook: one row per sample, headers reduced by ``header_key``.
+
+    The sheet ends in rows that are empty or hold a lone space; they are left out. An empty
+    row above the last sample is an error.
+    """
+    sheet = pd.read_excel(path, sheet_name=SONDE_REPORT_SHEET, header=SONDE_HEADER_ROW)
     sheet.columns = [header_key(column) for column in sheet.columns]
     leading = len(SONDE_LEADING)
     require(
@@ -633,11 +622,24 @@ def sonde_tables(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         and sorted(sheet.columns[leading:]) == sorted(SONDE_CHANNELS),
         f"Sonde sheet columns changed: {list(sheet.columns)}",
     )
+    empty = sheet.apply(lambda row: all(pd.isna(v) or not str(v).strip() for v in row), axis=1)
+    filled = [index for index, is_empty in empty.items() if not is_empty]
+    require(bool(filled), "The sonde sheet has no samples.")
+    sheet = sheet.loc[: filled[-1]]
+    require(not empty.loc[: filled[-1]].any(), "The sonde sheet has an empty row among its samples.")
     require(not sheet.isna().any().any(), "The sonde sheet has blank cells.")
+    for column in SONDE_CHANNELS:
+        sheet[column] = sheet[column].astype(float)
+    return sheet.reset_index(drop=True)
+
+
+def sonde_tables(path: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """The cast table and the sample table, from the sonde workbook."""
+    sheet = read_sonde_report(path)
 
     casts: list[dict] = []
     samples: list[pd.DataFrame] = []
-    for site, group in sheet.groupby("Site Name", sort=False):
+    for site, group in sheet.groupby(SONDE_SITE, sort=False):
         match = SITE_RE.search(str(site))
         require(match is not None, f"Cannot parse sonde site name {site!r}")
         month = SONDE_MONTHS[match.group("month").lower()]

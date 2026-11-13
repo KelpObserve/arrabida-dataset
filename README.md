@@ -9,7 +9,7 @@ KelpObserve is an AQUASERV Transnational Access project (PID 42082) hosted by CC
 Field observations from three campaigns in 2026 (June, July and September) at one site with infralittoral rock habitat on the Arrábida coast of Portugal. The site is about 1.4 km east-south-east of the Cabo Espichel lighthouse (Sesimbra; 38.409° N, 9.202° W), inside the Professor Luiz Saldanha Marine Park. The observations were collected as reference data for mapping kelp habitat from satellite imagery.
 
 - **Kelp quadrats.** 90 quadrats of 0.5 × 0.5 m along 18 transects in two depth strata. In each quadrat the divers recorded the cover of the annual kelp *Saccorhiza polyschides* and counted and measured its individuals (242 in all).
-- **Sonde casts.** A multiparameter sonde (YSI EXO2) was lowered at the dive stations 7 times and logged 1,390 samples of temperature, salinity, dissolved oxygen, pH, fluorescence and turbidity.
+- **Sonde casts.** A multiparameter sonde (YSI EXO2) was lowered at the dive stations 7 times; the record holds 1,390 samples of depth, temperature, salinity, dissolved oxygen and pH.
 - **Positions and tracks.** The recorded position of every quadrat, and one GPS track of the divers' surface float per campaign.
 - **Quadrat photographs.** One photograph of each July quadrat (30 JPEG) and 33 frames of the September quadrats with their raw files (33 JPEG and 33 ARW). June has none.
 - **Videos.** 20 transect and mapping videos, 77 minutes in all, in the companion record.
@@ -39,7 +39,7 @@ Tidy tables, the place to start:
 | `kelp_quadrats.geojson` | 90 | The same rows as points, for GIS. |
 | `kelp_individuals.csv` | 242 | One row per kelp individual: life stage and size. |
 | `sonde_casts.csv` | 7 | One row per sonde cast: station, date, time and depth range. |
-| `sonde_profiles.csv` | 1,390 | One row per sonde sample, all channels. |
+| `sonde_profiles.csv` | 1,390 | One row per sonde sample: depth, temperature, salinity, dissolved oxygen and pH. |
 | `dive_tracks.geojson` | 3 | One GPS track of the divers' surface float per campaign. |
 
 Release copies of the five delivered files, with the scientific content unchanged:
@@ -47,7 +47,7 @@ Release copies of the five delivered files, with the scientific content unchange
 | File | Content |
 |---|---|
 | `raw_ccmar_kelp_quadrats_2026.xlsx` | Kelp workbook: one row per kelp individual or empty quadrat, all three campaigns. |
-| `raw_ccmar_sonde_casts_2026.xlsx` | Sonde workbook: every sample of the seven casts, as exported from the instrument. |
+| `raw_ccmar_sonde_casts_2026.xlsx` | Sonde workbook as CCMAR curated it for release: a description sheet and a report sheet with six variables for every sample of the seven casts. |
 | `raw_ccmar_quadrat_positions_2026.gpkg` | Quadrat positions of all three campaigns (90 points). |
 | `raw_ccmar_quadrat_positions_july_dive_log.gpkg` | July delivery of the positions, with the timed dive log: date, time and tape mark of each July quadrat. |
 | `raw_ccmar_dive_tracks_2026.gpkg` | GPS tracks of the surface float, one per campaign. |
@@ -62,7 +62,7 @@ The record's README lists twenty known issues. The ones that matter most for reu
 - **Positions come from a towed surface float.** A recorded position can lie 10 m or more from the quadrat. Nine quadrats could not be reconciled with the lidar bathymetry at their recorded position; `position_check` holds the outcome.
 - **Depth labels are nominal**, differ between the workbook and the position file, and are not measured depths of the quadrats.
 - **September cover cells are blank** where June and July record 0. `cover_pct` holds 0 for all quadrats without kelp; `cover_pct_recorded` keeps the blank.
-- **Sonde values are as delivered.** Calibration records were not supplied, turbidity and three computed channels contain negative values, and the clock's time zone is not stated.
+- **Sonde values are as delivered.** The record holds the six variables CCMAR released; calibration records were not supplied, and the clock's time zone is not stated.
 - **One site, one summer.** The quadrats support comparisons between the three campaigns and the two strata at this site. They are not a habitat map.
 
 ## Software
@@ -105,7 +105,7 @@ arrabida-tidy --raw-dir raw --out-dir tidy
 - Groups the rows of the kelp workbook into quadrats by date, depth, transect and quadrat number. Each measured individual becomes one row of `kelp_individuals.csv`; the per-quadrat cover, erosion and epibiont values go to `kelp_quadrats.csv`.
 - Joins each quadrat to the position with the same campaign, stratum, transect and quadrat number. The two files label the strata with different depths, so the join key is the stratum.
 - Adds the date, time and tape mark of each July quadrat from the timed dive log.
-- Swaps the sonde dates back from their day-first storage and marks the profile leg of each cast: the samples between its shallowest and deepest reading.
+- Reads the report sheet of the sonde workbook, swaps the sonde dates back from their day-first storage and marks the profile leg of each cast: the samples between its shallowest and deepest reading.
 - Rounds the dive-track coordinates to seven decimals and drops their Z values.
 - Adds `survey_date` and `survey_date_evidence` from the campaign chronology, which is encoded explicitly in the function `survey_date()`, and retains the source date fields.
 
@@ -154,7 +154,7 @@ Cite the data as:
 
 > Rusu, A., Botezat, O., Paulo, D., Encarnação, J., Rosado, G. (2026). KelpObserve Sesimbra 2026: diver quadrat surveys of Saccorhiza polyschides kelp and water-column sonde profiles, Arrábida coast, Portugal (Version 1.0.0) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.23282075
 
-`CITATION.cff` gives the citation for the software.
+`CITATION.cff` gives the citation for the software, version 1.1.0, archived on Zenodo as [doi:10.5281/zenodo.24199215](https://doi.org/10.5281/zenodo.24199215).
 
 ## Credits
 

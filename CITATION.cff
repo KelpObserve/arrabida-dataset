@@ -2,7 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, cite the dataset it builds and this repository as below."
 type: software
 title: "KelpObserve Sesimbra 2026: processing software for the diver surveys of Saccorhiza polyschides kelp, Arrábida coast, Portugal"
-version: "1.0.0"
+version: "1.1.0"
+doi: 10.5281/zenodo.24199215
 license: Apache-2.0
 repository-code: "https://github.com/KelpObserve/arrabida-dataset"
 abstract: "Processing software of the KelpObserve Sesimbra 2026 dataset (diver quadrat surveys of Saccorhiza polyschides kelp, sonde casts, quadrat positions and dive tracks): derivation of the tidy tables from the files delivered by CCMAR, packing of the quadrat photographs, position check against lidar bathymetry, summary table and overview map. Each script reproduces the corresponding file of release 1.0.0 byte for byte."
@@ -11,6 +12,10 @@ authors:
     given-names: "Andrei"
     affiliation: "Pine View Software AS (Pineview), Norway"
     orcid: "https://orcid.org/0009-0000-1219-4816"
+  - family-names: "Botezat"
+    given-names: "Oana"
+    affiliation: "Pine View Software AS (Pineview), Norway"
+    orcid: "https://orcid.org/0009-0003-2248-0463"
 keywords:
   - "kelp"
   - "Saccorhiza polyschides"
@@ -34,6 +39,7 @@ references:
         orcid: "https://orcid.org/0009-0000-1219-4816"
       - family-names: "Botezat"
         given-names: "Oana"
+        orcid: "https://orcid.org/0009-0003-2248-0463"
       - family-names: "Paulo"
         given-names: "Diogo"
         orcid: "https://orcid.org/0000-0001-9061-6850"
